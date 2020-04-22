@@ -19,6 +19,12 @@ class TransactionsRepository {
     this.transactions = [];
   }
 
+  private getSum(type: string): number {
+    return this.transactions
+      .filter(transaction => transaction.type === type)
+      .reduce((acumulador, transaction) => acumulador + transaction.value, 0);
+  }
+
   public all(): Transaction[] {
     return this.transactions;
   }
@@ -28,13 +34,8 @@ class TransactionsRepository {
       return null;
     }
 
-    const totalInCome = this.transactions
-      .filter(transaction => transaction.type === 'income')
-      .reduce((acumulador, transaction) => acumulador + transaction.value, 0);
-
-    const totalOutCome = this.transactions
-      .filter(transaction => transaction.type === 'outcome')
-      .reduce((acumulador, transaction) => acumulador + transaction.value, 0);
+    const totalInCome = this.getSum('income');
+    const totalOutCome = this.getSum('outcome');
 
     const balance: Balance = {
       income: totalInCome,
